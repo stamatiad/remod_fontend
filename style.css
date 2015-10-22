@@ -66,15 +66,16 @@ body {
   /*height: 130px;*/
   min-height: 34px;
   max-height: 50%;
-  background-color: #27292c;
+  background-color: #222222;
   color: #ffffff;
-  overflow: auto;
 }
 .terminal {
   position: relative;
   white-space: pre-line;
-  height: 50%;
-  overflow: auto;
+  height: 300px;
+	overflow: auto;
+  background-color: #27292c;
+  color: #ffffff;
 }
 .svg {
   max-width: 100%;
