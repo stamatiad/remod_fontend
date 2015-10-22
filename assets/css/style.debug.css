@@ -1,0 +1,11 @@
+.debug.yes > span{
+	background-color: #FF4D4D;
+}
+
+.debug + span{
+	display: none;
+}
+
+.graphsvg{
+	margin-left: 20%;
+}

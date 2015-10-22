@@ -1,0 +1,323 @@
+<!--remod partial-->
+<!--<div class="container-fluid" style="position: absolute; min-width: 90%;">-->
+  <!--<div class="gc">-->
+    
+    <div class="leftpanel">
+      <div class="qv rc sm sp">
+        <div class="qw">
+          <!--<h5 class="ald">Control</h5>-->
+          <ul class="aoi">
+            <!--<li class="aoj">-->
+            <div class="col-md-6">
+              <div>WHO</div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveTarget('who_all_terminal') ? 'active' : ''" ng-click='session.togglesetWhoVariable("who_all_terminal")''> All Terminal </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveTarget('who_all_apical') ? 'active' : ''" ng-click='session.togglesetWhoVariable("who_all_apical")''> All Apical </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveTarget('who_all_basal') ? 'active' : ''" ng-click='session.togglesetWhoVariable("who_all_basal")''> All Basal </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveTarget('who_apical_terminal') ? 'active' : ''" ng-click='session.togglesetWhoVariable("who_apical_terminal")''> Apical Terminal </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveTarget('who_basal_terminal') ? 'active' : ''" ng-click='session.togglesetWhoVariable("who_basal_terminal")''> Basal Terminal </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveTarget('who_random_all') ? 'active' : ''" ng-click='session.togglesetWhoVariable("who_random_all")'> Random All </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveTarget('who_random_apical') ? 'active' : ''" ng-click='session.togglesetWhoVariable("who_random_apical")'> Random Apical </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveTarget('who_random_basal') ? 'active' : ''" ng-click='session.togglesetWhoVariable("who_random_basal")'> Random Basal </button>
+              </div>
+              </div>
+            <div class="col-md-6">
+              <div>WHAT</div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveAction('shrink') ? 'active' : ''" ng-click='session.setWhatVariable("shrink")'> Shrink </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveAction('remove') ? 'active' : ''" ng-click='session.setWhatVariable("remove")'> Remove </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveAction('extend') ? 'active' : ''" ng-click='session.setWhatVariable("extend")'> Extend </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveAction('branch') ? 'active' : ''" ng-click='session.setWhatVariable("branch")'> Branch </button>
+              </div>
+              <div>
+                <button type="button" class ="btn btn-primary btn-xs btn-block" ng-class="isActiveAction('scale') ? 'active' : ''" ng-click='session.setWhatVariable("scale")'> Scale </button>
+              </div>
+              <div>EXTENT</div>
+              <div class="btn-group" data-toggle="buttons">
+                  <label class="btn btn-primary btn-xs" ng-class="radioExtendModelMode ? 'active' : ''" ng-click="setRadioExtendModelPercent()" >%</label>
+                  <label class="btn btn-primary btn-xs" ng-class="radioExtendModelMode ? '' : 'active'" ng-click="setRadioExtendModelMicron()" >μm</label>
+                  <input type="text" name="session.inputExtendModel" ng-model="session.inputExtendModel" class="radioinput" placeholder="Amount in {{radioExtendModel}}">
+              </div>
+              <div>DIAMETER</div>
+              <div class="btn-group">
+                  <label class="btn btn-primary btn-xs" ng-class="radioDiameterModelMode ? 'active' : ''" ng-click="setRadioDiameterModelPercent()" >%</label>
+                  <label class="btn btn-primary btn-xs" ng-class="radioDiameterModelMode ? '' : 'active'" ng-click="setRadioDiameterModelMicron()" >μm</label>
+                  <input type="text" name="session.inputDiameterModel" ng-model="session.inputDiameterModel" class="radioinput" placeholder="Amount in {{radioExtendModel}}">
+              </div>
+              </div>
+          </ul>
+          <div class="col-md-12">
+            <button type="button" class ="btn btn-success btn-lg btn-block"ng-click='session.remodAction()'> Action </button>
+          </div>
+          <div class="col-md-12">
+            <button type="button" class ="btn btn-info btn-lg btn-block" ng-click="session.resetRunRemodParams();session.radioDiameterModel='none';session.radioExtendModel='none';session.inputDiameterModel=0;session.inputExtendModel=0"> Reset </button>
+          </div>
+        </div>
+        <div class="qw">
+          <h5 class="ald">Selected Dendrites</h5>
+          <div ng-repeat="dend in session.activeMorphology.selectedSections" style="float:left;">
+            ({{dend}})
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!--<div class="gz">
+      class="eb tb" 
+    </div>-->
+    
+    <div class="rightpanel">
+        <!--<div class="qv rc">-->
+          <!--<div class="d">
+            <h4 class="modal-title">Session</h4>
+          </div>-->
+    
+          <!--Cannot fucking do it with templates...-->
+          <div class="list-group">
+            <a href="#" class="list-group-item active">
+              <div ng-controller="modalUpload">
+                <script type="text/ng-template" id="myModalContent.html">
+                  <div class="container-fluid" ng-controller="UpController as uploader" >
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h3>SWC Uploader
+                        <div class="btn-group pull-right" data-toggle="buttons">
+                        <button type="button" class="btn btn-success" ng-class="uploadModeIsMultiple() ? '' : 'active'" ng-click="setSingleUploadMode()">
+                          <span>Analyze</span>
+                        </button>
+                        <button type="button" class="btn btn-success" ng-class="uploadModeIsMultiple() ? 'active' : ''" ng-click="setMultipleUploadMode()">
+                          <span>Compare</span>
+                        </button>
+                        </div>
+                      </h3>
+                      <div ng-show="uploader.isHTML5">
+                        <input type="file" nv-file-select="" uploader="uploader" multiple="" filters={"isSWC","isHOC"} id="fileUploadA" style="display: none;">
+                        <div nv-file-drop="" uploader="uploader" options="{ alias: 'groupa_' }" filters={"isSWC","isHOC"}>
+                          <label for="fileUploadA" class="well well-sm my-drop-zone">
+                            <p ng-show="uploadMultiple">Group A drop zone (or click to select file)</p>
+                            <p ng-hide="uploadMultiple">Drop zone (or click to select file)</p>
+                          </label>
+                        </div>
+                        <input type="file" nv-file-select="" uploader="uploader" multiple="" filters={"isSWC","isHOC"} id="fileUploadB" style="display: none;">
+                        <div nv-file-drop="" uploader="uploader" options="{ alias: 'groupb_' }" filters={"isSWC","isHOC"} ng-show="uploadMultiple">
+                          <label for="fileUploadB" class="well well-sm my-drop-zone">
+                            Group B drop zone (or click to select file)
+                          </label>
+                        </div>
+                        
+                      </div>
+                    </div
+                  </div>
+            
+                  <div class="col-md-12" style="margin-bottom: 40px">
+          
+                    <h3>Upload queue</h3>
+                    <p>Queue length: {{ uploader.queue.length }}</p>
+          
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th width="50%">Name</th>
+                          <th ng-show="uploader.isHTML5">Size</th>
+                          <th ng-show="uploader.isHTML5">Progress</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="item in uploader.queue">
+                          <td><strong>{{ item.file.alias }}{{ item.file.name }}</strong></td>
+                          <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                          <td ng-show="uploader.isHTML5">
+                            <div class="progress" style="margin-bottom: 0;">
+                              <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                            </div>
+                          </td>
+                          <td class="text-center">
+                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                          </td>
+                          <td nowrap>
+                            <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                              Upload
+                            </button>
+                            <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                              Cancel
+                            </button>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+          
+                    <div>
+                      <div>
+                        Queue progress:
+                        <div class="progress" style="">
+                          <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                        <span class="glyphicon glyphicon-upload"></span> Upload all
+                      </button>
+                      <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                      </button>
+                      <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                        <span class="glyphicon glyphicon-trash"></span> Remove all
+                      </button>
+                    </div>
+          
+                  </div>
+                </script>
+                <button type="button" class ="btn btn-success btn-block" ng-hide="session.isActive" ng-click='session.startSession()'>Start Session</button>
+                <div class="btn-group btn-group-justified" data-toggle="buttons" ng-show="session.isActive">
+                  <label class="btn btn-info" ng-click="" >Upload More</label>
+                  <label class="btn btn-danger" ng-click="session.endSession()">End Session</label>
+                </div>
+              </div>
+              <div>Morphologies in session: <span class="badge">{{session.morphologies.length}}</span></div>
+              </a>
+            <a href="#" class="list-group-item" ng-repeat="m in session.morphologies" ng-class="{'list-group-item-info':session.morphologyWithNameIsActive(m)}" ng-click="loadStatistics(m)">
+              {{m}}
+              <div class="btn-group pull-right" data-toggle="buttons">
+                <label class="btn btn-primary btn-sm" ng-class="session.morphologyWithNameIsActive(m) ? 'active' : ''" ng-click="session.loadMorphology(m,'before')" >Before</label>
+                <label class="btn btn-primary btn-sm" ng-click="session.loadMorphology(m,'after')">After</label>
+              </div>
+            </a>
+                        
+            
+          </div>
+                
+          <!--<div class="modal-body amf js-modalBody" ng-hide="session.uploadModeIsMultiple()">
+            <div class="uq">
+              <div class="qo cj ca js-msgGroup">
+                
+              </div>
+            </div>
+          </div>-->
+          
+          <div class="modal-body amf js-modalBody" ng-show="session.uploadModeIsMultiple()">
+            <div class="uq">
+              <!--Group A div-->
+              <div class="qo cj ca js-msgGroup">
+              <p ng-show="session.isActive" style="padding:15px;">Total morphologies in Group A: {{session.getMorphologiesOfGroup('groupa').length}}</p>
+              <a href="#" class="b" ng-repeat="m in session.getMorphologiesOfGroup('groupa')">
+                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
+                <div class="qf">
+                <div class="qg">
+                  <div class="aof">
+                  {{m}}
+                  <div class="btn-group pull-right" data-toggle="buttons">
+                    <label class="btn btn-primary btn-sm" ng-class="session.morphologyWithNameIsActive() ? 'active' : ''" ng-click="session.loadMorphology(m,'before')" >Before</label>
+                    <label class="btn btn-primary btn-sm" ng-click="session.loadMorphology(m,'after')">After</label>
+                  </div>
+                  </div>
+                </div>
+                </div>
+              </a>
+              </div>
+              
+              <!--Group B div-->
+              <div class="qo cj ca js-msgGroup">
+              <p ng-show="session.isActive" style="padding:15px;">Total morphologies in GroupB: {{session.getMorphologiesOfGroup('groupb').length}}</p>
+              <a href="#" class="b" ng-repeat="m in session.getMorphologiesOfGroup('groupb')">
+                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
+                <div class="qf">
+                <div class="qg">
+                  <div class="aof">
+                  {{m}}
+                  <div class="btn-group pull-right" data-toggle="buttons">
+                    <label class="btn btn-primary btn-sm" ng-class="session.morphologyWithNameIsActive() ? 'active' : ''" ng-click="session.loadMorphology(m,'before')" >Before</label>
+                    <label class="btn btn-primary btn-sm" ng-click="session.loadMorphology(m,'after')">After</label>
+                  </div>
+                  </div>
+                </div>
+                </div>
+              </a>
+              </div>
+              
+            </div>
+          </div>
+          
+          <!--<class="qv rc"-->
+        <!--</div> -->
+      </div>
+    <!--</div>-->
+<!--</div>-->
+
+<!--<div class="sk-cube-grid" ng-show="false">
+    <div class="sk-cube sk-cube1"></div>
+    <div class="sk-cube sk-cube2"></div>
+    <div class="sk-cube sk-cube3"></div>
+    <div class="sk-cube sk-cube4"></div>
+    <div class="sk-cube sk-cube5"></div>
+    <div class="sk-cube sk-cube6"></div>
+    <div class="sk-cube sk-cube7"></div>
+    <div class="sk-cube sk-cube8"></div>
+    <div class="sk-cube sk-cube9"></div>
+</div>-->
+<div class="canvas-holder" id="ui-view-canvas" ng-hide="viewUpdates()">
+  
+</div>
+  
+    
+
+
+
+
+<footer class="footer" ng-controller="footerController">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-4 center-block">
+        <button type="button" class ="cg fx fp eg k js-newMsg btn-block" ng-click='session.mainView.toggleLockY()'> Lock Y axis is {{session.mainView.controls.lockY}}</button>
+      </div>
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-1">
+        <!--<button class="btn btn-primary collapseterminal" type="button"><span class="glyphicon glyphicon-menu-right"></span>Terminal</button>-->
+        <button type="button" class="btn btn-default" ng-click="toggleCollapsed()">Terminal</button>
+      </div>
+    </div>
+    
+  </div>
+  
+  <div class="container-fluid terminal" ng-class="isCollapsed() ? 'collapse' : ''">
+    <div class="col-md-8">
+      <p>{{session.stdout}}</p>
+    </div>
+  </div>
+  <!--<script>
+    $('.footer .collapseterminal').on('click', function(e) {
+      console.log("Collapsing terminal!");
+        e.preventDefault();
+        $('.terminal').collapse('toggle');
+    })
+  </script>-->
+</footer>
