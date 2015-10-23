@@ -56,9 +56,12 @@ if ( ($inputJSON->Compare) and (!$inputJSON->Action) ){
 	
 } 
 if ( (!$inputJSON->Compare) and (!$inputJSON->Action) ){
+	$names = implode(',',$inputJSON->names);
+	$_SESSION["stdout"] .= 'imploded names are:\n';
+	$_SESSION["stdout"] .= $names;
 	$_SESSION["stdout"] .= "Analyzing morphologies:\n";
 	//Run non-compare scenario: //do we need names or filenames???SSS
-	$command = "sh /var/www/cgi-bin/runScript.sh /var/www/html/uploads/" . $ses_id . "/ " . $inputJSON->names;// . " 2>&1"; //<- this term is problematic; not escaped correctly?
+	$command = "sh /var/www/cgi-bin/runScript.sh /var/www/html/uploads/" . $ses_id . "/ " . $names;// . " 2>&1"; //<- this term is problematic; not escaped correctly?
 	//$command = "python /var/application/first_run.py /var/www/html/uploads/" . $ses_id . "/ " . escapeshellcmd($_GET['runParams']) . " 2>&1 | tee -a log.txt";
 	//$command = escapeshellcmd($command);
 	//send command to remod console:
@@ -104,10 +107,10 @@ if ( (!$inputJSON->Compare) and ($inputJSON->Action) ){
 	if ($diameter_variable_num==null) {
 		$diameter_variable_num="none";
 	}
-	$names = explode(',',$inputJSON->names);
-	for ($i = 0 ; $i < count($names) ; $i++){
+	//JSON has names in an array:
+	for ($i = 0 ; $i < count($inputJSON->names) ; $i++){
 		//call second_run.py once for each morphology in names array
-		$command = "/opt/anaconda/bin/python /var/www/cgi-bin/second_run.py  /var/www/html/uploads/" . $ses_id . "/ ". $names[$i] . ".swc " . $who_variable . " " . $who_random_variable . " " . $who_manual_variable . " " . $what_variable . " " . $extend_variable . " " . $extend_variable_num . " " . $diameter_variable . " " . $diameter_variable_num ;
+		$command = "sh /var/www/cgi-bin/runScript2.sh /var/www/html/uploads/" . $ses_id . "/ ". $inputJSON->names[$i] . ".swc " . $who_variable . " " . $who_random_variable . " " . $who_manual_variable . " " . $what_variable . " " . $extend_variable . " " . $extend_variable_num . " " . $diameter_variable . " " . $diameter_variable_num ;
 		//$command = $command = "/opt/anaconda/bin/python /var/www/cgi-bin/second_run.py";
 		$command = escapeshellcmd($command);
 		//$command = "sh /var/www/cgi-bin/runScript.sh /var/www/html/uploads/" . $ses_id . "/".$inputJSON->groupaDir. "/ " . $inputJSON->groupa;// . " 2>&1";

@@ -29,7 +29,7 @@ $_SESSION["UPLOAD_PATH"] = "/var/www/html/uploads/";
 	<meta name="description" content="Remod">
 	<meta name="author" content="team12">
 	<!-- Latest compiled and minified CSS <--></-->
-	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap.min.css">
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="toolkit.css">
 	<link rel="stylesheet" href="application.css">
@@ -38,23 +38,23 @@ $_SESSION["UPLOAD_PATH"] = "/var/www/html/uploads/";
 	<!-- Optional theme -->
 	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">-->
 	<!-- Latest compiled and minified JavaScript -->
-	<script src="assets/js/jquery-2.1.4.min.js"></script>
-	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="jquery-2.1.4.min.js"></script>
+	<script src="bootstrap.min.js"></script>
 	<!--<script src="assets/js/angular.min.js"></script>-->
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
 	<script src="remod.js"></script>
-	<script src="assets/js/three.min.js"></script>
+	<script src="three.min.js"></script>
 	<!--<script src="assets/js/TrackballControls.js"></script>-->
 	<!--<script src="assets/js/ajax.js"></script>-->
 	<!-- TMP TEST SCRIPTS -->
-	<script src="assets/js/Projector.js"></script>
-	<script src="assets/js/CanvasRenderer.js"></script>
+	<script src="Projector.js"></script>
+	<script src="CanvasRenderer.js"></script>
 	<!--<script src="assets/js/stats.min.js"></script>-->
 	<!--<script src="nCell.js"></script>-->
-	<script src="assets/js/ui-bootstrap-tpls-0.13.4.min.js"></script>
+	<script src="ui-bootstrap-tpls-0.13.4.min.js"></script>
 	<script src="angular-file-upload.min.js"></script>
-	<script src="assets/js/angular-ui-router.min.js"></script>
+	<script src="angular-ui-router.min.js"></script>
 </head>
 
 <body ng-controller='globalController'>

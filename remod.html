@@ -114,14 +114,14 @@
                       <div ng-show="uploader.isHTML5">
                         <input type="file" nv-file-select="" uploader="uploader" multiple="" filters={"isSWC","isHOC"} id="fileUploadA" style="display: none;">
                         <div nv-file-drop="" uploader="uploader" options="{ alias: 'groupa_' }" filters={"isSWC","isHOC"}>
-                          <label for="fileUploadA" class="well well-sm my-drop-zone">
+                          <label for="fileUploadA" class="container well well-sm my-drop-zone">
                             <p ng-show="uploadMultiple">Group A drop zone (or click to select file)</p>
                             <p ng-hide="uploadMultiple">Drop zone (or click to select file)</p>
                           </label>
                         </div>
                         <input type="file" nv-file-select="" uploader="uploader" multiple="" filters={"isSWC","isHOC"} id="fileUploadB" style="display: none;">
                         <div nv-file-drop="" uploader="uploader" options="{ alias: 'groupb_' }" filters={"isSWC","isHOC"} ng-show="uploadMultiple">
-                          <label for="fileUploadB" class="well well-sm my-drop-zone">
+                          <label for="fileUploadB" class="container well well-sm my-drop-zone">
                             Group B drop zone (or click to select file)
                           </label>
                         </div>
@@ -296,7 +296,7 @@
       <div class="col-md-4">
       </div>
       <div class="col-md-4 center-block">
-        <button type="button" class ="cg fx fp eg k js-newMsg btn-block" ng-click='session.mainView.toggleLockY()'> Lock Y axis is {{session.mainView.controls.lockY}}</button>
+        <!--<button type="button" class ="cg fx fp eg k js-newMsg btn-block" ng-click='session.mainView.toggleLockY()'> Lock Y axis is {{session.mainView.controls.lockY}}</button>-->
       </div>
       <div class="col-md-3">
       </div>

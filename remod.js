@@ -11,8 +11,8 @@
 		$rootScope.$on("$stateChangeError", console.log.bind(console));
 	};
 	
-	app.factory('remodSession', ['$rootScope', '$http', '$filter', '$timeout', '$interval',
-		function ($rootScope, $http, $filter, $timeout, $interval) {
+	app.factory('remodSession', ['$rootScope', '$http', '$filter', '$timeout', '$interval', '$modal',
+		function ($rootScope, $http, $filter, $timeout, $interval, $modal) {
 			$rootScope.$on('uploaderEmit2Terminal', function(event, args){
 				remodSession.stdoutUpdate(args.stdout.output);
 			});
@@ -38,6 +38,12 @@
 					sections = new Array();
 					sectionIDs = new Array();
 					selectedSections = new Array();
+				},
+				id2idx: function(id){
+					return this.sectionIDs.indexOf(id);
+				},
+				idx2id: function(idx){
+					return this.sectionIDs[idx];
 				},
 				sectionIdExists : function(sid){
 					var i;
@@ -951,13 +957,15 @@
 					//ATTENTION input is sec IDX not ID!
 					//check if section is selected previously:
 					var color;
-					var idx = morphology.selectedSections.indexOf(secIdx);
+					//In order to return the sec ID for further remodelling
+					//Push to selected sections the ID and NOT the IDX!
+					var idx = morphology.selectedSections.indexOf(morphology.idx2id(secIdx));
 					if (idx >= 0 ){
 						color = this.drawColor;
 						morphology.selectedSections.splice(idx,1);
 					} else {
 						color = this.highlightColor;
-						morphology.selectedSections.push(secIdx);
+						morphology.selectedSections.push(morphology.idx2id(secIdx));
 					}
 					console.log(morphology.selectedSections);
 					/*var color = this.drawColor;
@@ -1058,7 +1066,7 @@
 						//General structure to invoce remodeling python script:
 						Compare: 0,
 						Action: 0,
-						names: "",
+						names: new Array(),
 						groupa: "", 
 						groupb: "",
 						groupaDir: "",
@@ -1166,10 +1174,15 @@
 					_this.getRunRemodParams().extend_variable = _this.radioExtendModel;
 					_this.getRunRemodParams().diameter_variable = _this.radioDiameterModel;
 					//Get name of all morphologies for application of remodeling action:
-					_this.getRunRemodParams().names = '';
+					//names are in an array and let php parse the JSON:
+					_this.getRunRemodParams().names.length = 0;
+					for (var i = 0 ; i < _this.morphologies.length ; i++){
+						_this.getRunRemodParams().names.push(_this.morphologies[i]);
+					}
+					/*_this.getRunRemodParams().names = '';
 					for (var i = 0 ; i < _this.morphologies.length ; i++){
 						_this.getRunRemodParams().names += _this.morphologies[i] + ",";
-					}
+					}*/
 					//cache var for JSON:
 					var orgJSON = _this.getRunRemodParams();
 					var JSONobj = JSON.stringify(orgJSON);
@@ -1213,18 +1226,20 @@
 						_this.setphpid(jsonResponse.output.sessionId);
 						//this.phpid = jsonResponse.output.sessionId;
 						console.log(jsonResponse);
+						//by default opens the upload modal for the user to provide files:
+						//$broadcast is as fast as emit in newer angular:
+						$rootScope.$broadcast('openModalRequest');
+						//Clear active neuron:
+						_this.deleteMorphology();
+						//Reset morph names: (more decent way?) //SSS
+						_this.morphologies = new Array();
+						//_this.openUploaderModal();
+						//Uploader handles the rest (uploader.onCompleteAll)
 						console.log("Current Session restarted!");
 					}, function(){
 						console.log("ERROR in restarting Session!");
 					});
-					//by default opens the upload modal for the user to provide files:
-					//$broadcast is as fast as emit in newer angular:
-					$rootScope.$broadcast('openModalRequest');
-					//Clear active neuron:
-					_this.deleteMorphology();
-					//Reset morph names: (more decent way?) //SSS
-					_this.morphologies = new Array();
-					//Uploader handles the rest (uploader.onCompleteAll)
+					
 				},
 				endSession: function(){
 					var _this = this;
@@ -1252,6 +1267,30 @@
 						this.stdout = this.stdout.concat(output);
 				},
 				//Modal Controller:
+				openUploaderModal: function(){
+					var modalInstance = $modal.open({
+						animation: true,
+						templateUrl: 'myModalContent.html',
+						controller: 'ModalInstanceCtrl',
+						size: "xl",
+						resolve: {
+						}
+					});
+					modalInstance.result.then(function (selectedItem) {
+						//$scope.selected = selectedItem;
+						return modalInstance;
+					}, function () {
+						//$log.info('Modal dismissed at: ' + new Date());
+					});
+				},
+				closeUploaderModal: function($modalInstance){
+					//if a modal is active, close it:
+					if($modalInstance){
+						console.log($modalInstance);
+					} else {
+						console.log("No active modal instance. Doing nothing");
+					}
+				},
 				/*modal: {
 					animationsEnabled : true,
 					open : function (size) {
@@ -1279,44 +1318,49 @@
 					console.log(morphArray.length);
 					//morphArray is uploader queue
 					//Generate parameter string for python:
-					var remodParams = "";
+					
 					/*for (var i = 0 ; i < this.getNoOfMorphologies() ; i++){
 						remodParams = this.getMorphologyByIdx(i).name + " ";
 					}*/
-					//Get everything tidy and clean in a JSON object:
+					//Get everything tidy and clean in a JSON object that is used across:
+					/*var remodParams = "";
 					var runRemodParams = {
 						Compare: 0,
-						names: "",
+						names: new Array(),
 						groupa: "", 
 						groupb: "",
 						groupaDir: "",
 						groupbDir: "" //only the postfix not the entire path!
-					};
+					};*/
+					_this.resetRunRemodParams(); //reset to default:
 					
 					
 					if(doCompare){
-						runRemodParams.Compare = 1;
-						runRemodParams.groupaDir = "groupa";
-						runRemodParams.groupbDir = "groupb";
+						_this.getRunRemodParams().Compare = 1;
+						_this.getRunRemodParams().groupaDir = "groupa";
+						_this.getRunRemodParams().groupbDir = "groupb";
 						for (var i = 0 ; i < morphArray.length ; i++){
 							console.log("comparing " + morphArray[i].file.name.slice(0,5) + " and groupa, is: " );
 							//console.log(morphArray[i].file.name.slice(0,6).localeCompare("groupa") == 0);
 							if( morphArray[i].file.name.slice(0,6).localeCompare("groupa") == 0 ){
-								runRemodParams.groupa = runRemodParams.groupa.concat(morphArray[i].file.name + " ");
+								_this.getRunRemodParams().groupa = _this.getRunRemodParams().groupa.concat(morphArray[i].file.name + " ");
 							} 
 							if( morphArray[i].file.name.slice(0,6).localeCompare("groupb") == 0 ){
-								runRemodParams.groupb = runRemodParams.groupb.concat(morphArray[i].file.name + " ");
+								_this.getRunRemodParams().groupb = _this.getRunRemodParams().groupb.concat(morphArray[i].file.name + " ");
 							}
 						}
 						
 					} else {
-						runRemodParams.Compare = 0;
+						_this.getRunRemodParams().Compare = 0;
+						_this.getRunRemodParams().names.length = 0;
 						for (var i = 0 ; i < morphArray.length ; i++){
-							runRemodParams.names = runRemodParams.names.concat(morphArray[i].file.name + ",");
+							_this.getRunRemodParams().names.push(morphArray[i].file.name);
+							//runRemodParams.names = runRemodParams.names.concat(morphArray[i].file.name + ",");
 						}
 					}
 					
-					var JSONobj = JSON.stringify(runRemodParams);
+					var orgJSON = _this.getRunRemodParams();
+					var JSONobj = JSON.stringify(orgJSON);
 					console.log("about to call python with params:");
 					console.log(JSONobj);
 					$http.post("run_remod.php",JSONobj).then(function(){
@@ -1786,24 +1830,6 @@
 			//$log.info('Modal dismissed at: ' + new Date());
 			});
 		});
-		/*$scope.open = function (size) {
-			var modalInstance = $modal.open({
-			animation: $scope.animationsEnabled,
-			templateUrl: 'myModalContent.html',
-			controller: 'ModalInstanceCtrl',
-			size: size,
-			resolve: {
-				items: function () {
-				return $scope.items;
-				}
-			}
-			});
-			modalInstance.result.then(function (selectedItem) {
-			$scope.selected = selectedItem;
-			}, function () {
-			//$log.info('Modal dismissed at: ' + new Date());
-			});
-		};*/
 		$scope.toggleAnimation = function () {
 			$scope.animationsEnabled = !$scope.animationsEnabled;
 		};
@@ -1827,8 +1853,8 @@
 				
 			}
 		};
-	}]);
-	*/
+	}]);*/
+	
 	app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
 		$scope.items = items;
 		$scope.selected = {
