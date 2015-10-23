@@ -1,0 +1,94 @@
+<!--statistics partial-->
+<div class="by amt" style="position: absolute; min-width: 90%;">
+  <div class="gc">
+
+    <div class="gn">
+
+      <!--If Analyze-->
+      <div class="qv rc sm sp" ng-hide="session.uploadModeIsMultiple()">
+        <div class="qw">
+          <h5 class="ald">Statistics</h5>
+          <ul class="eb tb" ng-repeat="stat in getTxtFilesNoPrefix()">
+            <li>{{stat}}</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!--If Compare-->
+      <div class="qv rc sm sp" ng-show="session.uploadModeIsMultiple()">
+        <div class="qw">
+          <h5 class="ald">Comparison Statistics</h5>
+          <ul class="eb tb" ng-repeat="stat in getTxtFilesNoPrefix()">
+            <li>{{stat}}</li>
+          </ul>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="gz">
+      <ul class="ca qo anx">
+        <li class="qf b aml">
+          Visual statistics
+        </li>
+        <li class="qf b aml" ng-repeat="svg in getSvgFiles()">
+          <div>
+            {{svg}}
+            <img ng-src="http://www.remod.gr/uploads/{{session.phpid}}/downloads/statistics/{{svg}}" alt="svg file" class="svg"></img>
+          </div>
+        </li>
+
+      </ul>
+
+    </div>
+
+    <div class="gn">
+      <!--<div class="qv rc">
+        <div class="d">
+          <div class="modal-body amf js-modalBody">
+            <div class="uq">
+              <div class="qo cj ca js-msgGroup">-->
+                <!--<div class="list-group">
+                  <a href="#" class="list-group-item active">Total morphologies in session: <span class="badge">{{session.morphologies.length}}</span></a>
+                  <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+                  <a href="#" class="list-group-item">Morbi leo risus</a>
+                  <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+                  <a href="#" class="list-group-item">Vestibulum at eros</a>
+                </div>-->
+                <!--<p ng-show="session.isActive" style="padding:15px;">Total morphologies in session: {{session.morphologies.length}}.</p>-->
+                <div class="list-group" ng-show="session.isActive" >
+                  <a href="#" class="list-group-item active">Morphologies in session: <span class="badge">{{session.morphologies.length}}</span></a>
+                  <a href="#" class="list-group-item" ng-repeat="m in session.morphologies" ng-class="{'list-group-item-info':isActiveStatisticsMorphology(m)}" ng-click="loadStatistics(m)">
+                    {{m}}
+                  </a>
+                </div>
+                  <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
+                  <!--<div class="qf">-->
+                    <!--<span class="qj">
+                      <img class="cu qh" src="assets/img/avatar-fat.jpg">
+                      </span>-->
+                    <!--<div class="qg">
+                      <div class="aof">-->
+                        <!--{{m}}-->
+                      <!--</div>
+                    </div>
+                  </div>-->
+                <!--</div>
+              </div>
+            </div>
+          </div>
+        </div>-->
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<div>
+
+</div>
+
