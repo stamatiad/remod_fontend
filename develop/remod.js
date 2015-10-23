@@ -13,9 +13,6 @@
 	
 	app.factory('remodSession', ['$rootScope', '$http', '$filter', '$timeout', '$interval', '$modal',
 		function ($rootScope, $http, $filter, $timeout, $interval, $modal) {
-			$rootScope.$on('uploaderEmit2Terminal', function(event, args){
-				remodSession.stdoutUpdate(args.stdout.output);
-			});
 			
 			function defclass(prototype) {
 				var constructor = prototype.constructor;
@@ -1215,8 +1212,12 @@
 					return this.uploadMultiple;
 				},
 				uploadMultiple : false,
-				startSession: function (){
+				startSession: function ($scope){
 					var _this = this;
+					console.log("_this is:");
+					console.log(this);
+					console.log("$scope is:");
+					console.log($scope);
 					//starts new session:
 					_this.activateSession();
 					_this.stdout = "Starting new session.\n";
@@ -1227,13 +1228,11 @@
 						//this.phpid = jsonResponse.output.sessionId;
 						console.log(jsonResponse);
 						//by default opens the upload modal for the user to provide files:
-						//$broadcast is as fast as emit in newer angular:
-						$rootScope.$broadcast('openModalRequest');
+						_this.openUploaderModal();
 						//Clear active neuron:
 						_this.deleteMorphology();
 						//Reset morph names: (more decent way?) //SSS
 						_this.morphologies = new Array();
-						//_this.openUploaderModal();
 						//Uploader handles the rest (uploader.onCompleteAll)
 						console.log("Current Session restarted!");
 					}, function(){
@@ -1268,28 +1267,11 @@
 				},
 				//Modal Controller:
 				openUploaderModal: function(){
-					var modalInstance = $modal.open({
-						animation: true,
-						templateUrl: 'myModalContent.html',
-						controller: 'ModalInstanceCtrl',
-						size: "xl",
-						resolve: {
-						}
-					});
-					modalInstance.result.then(function (selectedItem) {
-						//$scope.selected = selectedItem;
-						return modalInstance;
-					}, function () {
-						//$log.info('Modal dismissed at: ' + new Date());
-					});
+					//$broadcast is as fast as emit in newer angular:
+					$rootScope.$broadcast('openModalRequest');console.log('openUploaderModal');
 				},
 				closeUploaderModal: function($modalInstance){
-					//if a modal is active, close it:
-					if($modalInstance){
-						console.log($modalInstance);
-					} else {
-						console.log("No active modal instance. Doing nothing");
-					}
+					$rootScope.$broadcast('closeModalRequest');
 				},
 				/*modal: {
 					animationsEnabled : true,
@@ -1527,7 +1509,6 @@
 				},
 				
 			};
-			
 			
 		return remodSession;
 	}]);
@@ -1808,7 +1789,8 @@
 		}
 	}]);
 	
-	app.controller('modalUpload', function($scope, $modal){
+	app.controller('modalUpload', ['$scope', '$modal', 'remodSession', function($scope, $modal, remodSession){
+		$scope.session = remodSession;
 		$scope.items = ['item1', 'item2', 'item3'];
 		$scope.animationsEnabled = true;
 		$scope.$on('openModalRequest', function(){
@@ -1833,7 +1815,7 @@
 		$scope.toggleAnimation = function () {
 			$scope.animationsEnabled = !$scope.animationsEnabled;
 		};
-	});
+	}]);
 	
 	/*app.directive('morphologiespanel', ['$timeout', 'remodSession', function ( $timeout, remodSession ) {
 		return {
@@ -1860,9 +1842,9 @@
 		$scope.selected = {
 			item: $scope.items[0]
 		};
-		$scope.ok = function () {
+		$scope.$on('closeModalRequest', function(){
 			$modalInstance.close($scope.selected.item);
-		};
+		});
 		$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
 		};
@@ -1956,9 +1938,9 @@
             console.info('onCompleteItem', fileItem, response, status, headers);
         };
         uploader.onCompleteAll = function() {
-			uploader.emit2Terminal("Uploading "+this.queue.length+" file(s) completed!\n");
+			$scope.session.stdoutUpdate("Uploading "+this.queue.length+" file(s) completed!\n");
 			if ($scope.uploadModeIsMultiple()){
-				uploader.emit2Terminal("User is performing a comparison!\n");
+				$scope.session.stdoutUpdate("User is performing a comparison!\n");
 			}
 					
 			//Add morphologies names to global controller:
@@ -1969,7 +1951,7 @@
 			//first run python to generate .txt files:
 			//also python should be called synchronously!
 			//give to python the morphologies giati ta kaname poutana edw..
-			uploader.emit2Terminal("Running remodeling...\n");
+			$scope.session.stdoutUpdate("Running remodeling...\n");
 			$scope.session.executePython(this.queue,$scope.uploadModeIsMultiple());
 			
 			//Then load morphologies to angular:
@@ -1996,6 +1978,9 @@
 			
 			//Initiate new Session:
 			$scope.session.activateSession();
+			
+			//Close the Uploader Moadal:
+			$scope.session.closeUploaderModal();
 			
             console.info('onCompleteAll');
         };

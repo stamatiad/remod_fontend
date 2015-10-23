@@ -196,7 +196,7 @@
                 </script>
                 <button type="button" class ="btn btn-success btn-block" ng-hide="session.isActive" ng-click='session.startSession()'>Start Session</button>
                 <div class="btn-group btn-group-justified" data-toggle="buttons" ng-show="session.isActive">
-                  <label class="btn btn-info" ng-click="" >Upload More</label>
+                  <label class="btn btn-info" ng-click="session.openUploaderModal()" >Upload More</label>
                   <label class="btn btn-danger" ng-click="session.endSession()">End Session</label>
                 </div>
               </div>
