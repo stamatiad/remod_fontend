@@ -14,7 +14,24 @@ body {
   max-width: 100%;
 }
 */
-
+.btn-sharp{
+  border-radius:0;
+}
+.btn-dark{
+  background-color: #101010;
+  color: #9d9d9d;
+  border-color: #101010;
+}
+.btn-dark:hover{
+  background-color: #101010;
+  color: #fff;
+  border-color: #101010;
+}
+.btn-dark:hover, .btn-dark:focus, .btn-dark:active{
+  background-color: #101010;
+  color: #fff;
+  border-color: #101010;
+}
 .container > .toolbar {
     position: absolute;
     bottom: 130px;

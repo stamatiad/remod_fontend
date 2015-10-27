@@ -200,15 +200,31 @@
                   <label class="btn btn-danger" ng-click="session.endSession()">End Session</label>
                 </div>
               </div>
-              <div>Morphologies in session: <span class="badge">{{session.morphologies.length}}</span></div>
               </a>
-            <a href="#" class="list-group-item" ng-repeat="m in session.morphologies" ng-class="{'list-group-item-info':session.morphologyWithNameIsActive(m)}" ng-click="loadStatistics(m)">
-              {{m}}
-              <div class="btn-group pull-right" data-toggle="buttons">
-                <label class="btn btn-primary btn-sm" ng-class="session.morphologyWithNameIsActive(m) ? 'active' : ''" ng-click="session.loadMorphology(m,'before')" >Before</label>
-                <label class="btn btn-primary btn-sm" ng-click="session.loadMorphology(m,'after')">After</label>
-              </div>
-            </a>
+              <a href="#" class="list-group-item active" ng-show="session.isActive">Morphologies in session: <span class="badge">{{session.morphologies.length}}</span></a>
+              <a href="#" class="list-group-item list-group-item-info" ng-show="session.isActive && session.uploadModeIsMultiple()">Morphologies in group A: <span class="badge">{{session.getMorphologiesOfGroup('groupa').length}}</span></a>
+              <a href="#" class="list-group-item" ng-repeat="m in session.getMorphologiesOfGroup('groupa')" ng-class="{'list-group-item-info':session.morphologyWithNameIsActive(m)}" ng-click="loadStatistics(m)">
+                {{m}}
+                <div class="btn-group pull-right" data-toggle="buttons">
+                  <label class="btn btn-primary btn-sm" ng-class="{'active':session.morphologyWithNameIsActive(m,'before')}" ng-click="session.loadMorphology(m,'before')" >Before</label>
+                  <label class="btn btn-primary btn-sm" ng-class="{'active':session.morphologyWithNameIsActive(m,'after')}" ng-click="session.loadMorphology(m,'after')">After</label>
+                </div>
+              </a>
+              <a href="#" class="list-group-item list-group-item-info" ng-show="session.isActive && session.uploadModeIsMultiple()">Morphologies in group B: <span class="badge">{{session.getMorphologiesOfGroup('groupb').length}}</span></a>
+              <a href="#" class="list-group-item" ng-repeat="m in session.getMorphologiesOfGroup('groupb')" ng-class="{'list-group-item-info':session.morphologyWithNameIsActive(m)}" ng-click="loadStatistics(m)">
+                {{m}}
+                <div class="btn-group pull-right" data-toggle="buttons">
+                  <label class="btn btn-primary btn-sm" ng-class="{'active':session.morphologyWithNameIsActive(m,'before')}" ng-click="session.loadMorphology(m,'before')" >Before</label>
+                  <label class="btn btn-primary btn-sm" ng-class="{'active':session.morphologyWithNameIsActive(m,'after')}" ng-click="session.loadMorphology(m,'after')">After</label>
+                </div>
+              </a>
+              <a href="#" class="list-group-item" ng-show="session.isActive && !session.uploadModeIsMultiple()" ng-repeat="m in session.morphologies" ng-class="{'list-group-item-info':session.morphologyWithNameIsActive(m)}" ng-click="loadStatistics(m)">
+                {{m}}
+                <div class="btn-group pull-right" data-toggle="buttons">
+                  <label class="btn btn-primary btn-sm" ng-class="{'active':session.morphologyWithNameIsActive(m,'before')}" ng-click="session.loadMorphology(m,'before')" >Before</label>
+                  <label class="btn btn-primary btn-sm" ng-class="{'active':session.morphologyWithNameIsActive(m,'after')}" ng-click="session.loadMorphology(m,'after')">After</label>
+                </div>
+              </a>
                         
             
           </div>
@@ -220,49 +236,6 @@
               </div>
             </div>
           </div>-->
-          
-          <div class="modal-body amf js-modalBody" ng-show="session.uploadModeIsMultiple()">
-            <div class="uq">
-              <!--Group A div-->
-              <div class="qo cj ca js-msgGroup">
-              <p ng-show="session.isActive" style="padding:15px;">Total morphologies in Group A: {{session.getMorphologiesOfGroup('groupa').length}}</p>
-              <a href="#" class="b" ng-repeat="m in session.getMorphologiesOfGroup('groupa')">
-                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
-                <div class="qf">
-                <div class="qg">
-                  <div class="aof">
-                  {{m}}
-                  <div class="btn-group pull-right" data-toggle="buttons">
-                    <label class="btn btn-primary btn-sm" ng-class="session.morphologyWithNameIsActive() ? 'active' : ''" ng-click="session.loadMorphology(m,'before')" >Before</label>
-                    <label class="btn btn-primary btn-sm" ng-click="session.loadMorphology(m,'after')">After</label>
-                  </div>
-                  </div>
-                </div>
-                </div>
-              </a>
-              </div>
-              
-              <!--Group B div-->
-              <div class="qo cj ca js-msgGroup">
-              <p ng-show="session.isActive" style="padding:15px;">Total morphologies in GroupB: {{session.getMorphologiesOfGroup('groupb').length}}</p>
-              <a href="#" class="b" ng-repeat="m in session.getMorphologiesOfGroup('groupb')">
-                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>-->
-                <div class="qf">
-                <div class="qg">
-                  <div class="aof">
-                  {{m}}
-                  <div class="btn-group pull-right" data-toggle="buttons">
-                    <label class="btn btn-primary btn-sm" ng-class="session.morphologyWithNameIsActive() ? 'active' : ''" ng-click="session.loadMorphology(m,'before')" >Before</label>
-                    <label class="btn btn-primary btn-sm" ng-click="session.loadMorphology(m,'after')">After</label>
-                  </div>
-                  </div>
-                </div>
-                </div>
-              </a>
-              </div>
-              
-            </div>
-          </div>
           
           <!--<class="qv rc"-->
         <!--</div> -->
@@ -302,7 +275,10 @@
       </div>
       <div class="col-md-1">
         <!--<button class="btn btn-primary collapseterminal" type="button"><span class="glyphicon glyphicon-menu-right"></span>Terminal</button>-->
-        <button type="button" class="btn btn-default" ng-click="toggleCollapsed()">Terminal</button>
+        <button type="button" class="btn btn-default btn-dark btn-sharp" ng-click="toggleCollapsed()">
+          <span ng-show="collapsed" class="glyphicon glyphicon-menu-up"></span>
+          <span ng-hide="collapsed" class="glyphicon glyphicon-menu-down"></span>
+          Terminal</button>
       </div>
     </div>
     

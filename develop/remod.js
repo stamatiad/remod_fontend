@@ -27,7 +27,7 @@
 				sections : new Array(),
 				sectionIDs : new Array(),
 				selectedSections: new Array(),
-				
+				historyState: "before",
 				constructor : function(){
 					name = "";
 					id = null;
@@ -1408,11 +1408,11 @@
 						this.activeMorphology = null;
 					}
 				},
-				loadMorphology: function(name,state){
+				loadMorphology: function(name,historyState){
 					var _this = this;
 					//allo name allo filename!
 					//Only one current morphology! SSS
-					var rqst = "load_morphology.php?name=" + name + "&state=" + state ;
+					var rqst = "load_morphology.php?name=" + name + "&historyState=" + historyState ;
 					console.log(rqst);
 					console.log("Quering morphology " + name + " from the backend...");
 					//show spinner in view
@@ -1433,6 +1433,7 @@
 						_this.activeMorphology = new NaiveNeuron();
 						_this.activeMorphology.name = JsonResponse.output.name;
 						_this.activeMorphology.group = JsonResponse.output.group;
+						_this.activeMorphology.historyState = historyState;
 						var material,geometry,line;
 						//get origin and transpose vector:
 						var origin = new THREE.Vector3( 0,0,0 );
@@ -1454,15 +1455,22 @@
 						//hide loading spinner:
 						session.mainView.setViewUpdate(false);
 					}, function(){
+						//If morphology is not found on server or other error.
 						console.log("HTTP.GET ERROR!");
 					});
 
 					return ;
 				},
-				morphologyWithNameIsActive: function(n){
+				morphologyWithNameIsActive: function(n,hs){
+					//Returns false if not and 'before' of 'after' if in each state:
 					if( this.activeMorphology ){
 						if( this.activeMorphology.name.localeCompare(n) == 0 ){
-							return true;
+							if (this.activeMorphology.historyState.localeCompare(hs)==0){
+								return true;
+							} else {
+								return false;
+							}
+							
 						} else {
 							return false;
 						}
@@ -1533,9 +1541,10 @@
 	app.controller('statisticsController', function($http, $scope, $timeout, $interval, remodSession){
 		$scope.session = remodSession;
 		$scope.activeStatisticsMorphology = "";
+		$scope.statMorphologies = new Array();
 		$scope.isActiveStatisticsMorphology = function(name){
-			console.log("ISactive stats morphology "+name+" is "+($scope.activeStatisticsMorphology.localeCompare(name) == 0));
-			console.log("active stats morph is: "+$scope.activeStatisticsMorphology);
+			//console.log("ISactive stats morphology "+name+" is "+($scope.activeStatisticsMorphology.localeCompare(name) == 0));
+			//console.log("active stats morph is: "+$scope.activeStatisticsMorphology);
 			return ($scope.activeStatisticsMorphology.localeCompare(name) == 0);
 		};
 		$scope.makeActiveStatisticsMorphology = function(name){
@@ -1602,6 +1611,14 @@
 		$scope.$on('$viewContentLoaded', function() {
 			//pause main view animation and interactivity to save memory:
 			$scope.session.pauseMainView = true;
+			//Update available morphologies, adding the 'Average' morphology also:
+			$scope.statMorphologies.length = 0;
+			for (var i = 0 ; i < $scope.session.morphologies.length ; i++){
+				console.log("pushing name from session "+$scope.session.morphologies[i]);
+				$scope.statMorphologies.push($scope.session.morphologies[i]);
+			}
+			if($scope.session.morphologies.length>1){$scope.statMorphologies.push("average");}
+			console.log($scope.statMorphologies);
 			//request the filenames array from backend for a specific morphology:
 			$scope.loadStatistics($scope.session.activeMorphology.name);
 			/*$http.get("query_statistics.php").then(function(response){

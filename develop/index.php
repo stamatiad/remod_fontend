@@ -29,7 +29,7 @@ $_SESSION["UPLOAD_PATH"] = "/var/www/html/uploads/";
 	<meta name="description" content="Remod">
 	<meta name="author" content="team12">
 	<!-- Latest compiled and minified CSS <--></-->
-	<link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="toolkit.css">
 	<link rel="stylesheet" href="application.css">

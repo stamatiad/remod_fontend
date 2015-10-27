@@ -19,8 +19,8 @@ if( isset($_GET['name']) ){
 } else {
 	$errorMsg .= "Failed to pass morphology name!\n";
 }
-if( isset($_GET['state']) ){
-	$state = escapeshellcmd($_GET['state']);
+if( isset($_GET['historyState']) ){
+	$historyState = escapeshellcmd($_GET['historyState']);
 } else {
 	$errorMsg .= "Failed to pass morphology state flag!\n";
 }
@@ -32,15 +32,15 @@ if ($name == "demo"){
 } else {
 	//Search through backend folders to get the morphology:
 	//pio mpakalia pe8aineis..
-	if(file_exists("/var/www/html/uploads/" . $ses_id . "/" . $name ."_".$state.".txt")){
-		$filename = "/var/www/html/uploads/" . $ses_id . "/" . $name ."_".$state.".txt" ;
+	if(file_exists("/var/www/html/uploads/" . $ses_id . "/" . $name ."_".$historyState.".txt")){
+		$filename = "/var/www/html/uploads/" . $ses_id . "/" . $name ."_".$historyState.".txt" ;
 	}
-	if(file_exists("/var/www/html/uploads/" . $ses_id . "/groupa/" . $name ."_".$state.".txt")){
-		$filename = "/var/www/html/uploads/" . $ses_id . "/groupa/" . $name ."_".$state.".txt" ;
+	if(file_exists("/var/www/html/uploads/" . $ses_id . "/groupa/" . $name ."_".$historyState.".txt")){
+		$filename = "/var/www/html/uploads/" . $ses_id . "/groupa/" . $name ."_".$historyState.".txt" ;
 		$group = "groupa";
 	}
-	if(file_exists("/var/www/html/uploads/" . $ses_id . "/groupb/" . $name ."_".$state.".txt")){
-		$filename = "/var/www/html/uploads/" . $ses_id . "/groupb/" . $name ."_".$state.".txt" ;
+	if(file_exists("/var/www/html/uploads/" . $ses_id . "/groupb/" . $name ."_".$historyState.".txt")){
+		$filename = "/var/www/html/uploads/" . $ses_id . "/groupb/" . $name ."_".$historyState.".txt" ;
 		$group = "groupb";
 	}
 }

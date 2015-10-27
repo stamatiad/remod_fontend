@@ -59,7 +59,7 @@
                 <!--<p ng-show="session.isActive" style="padding:15px;">Total morphologies in session: {{session.morphologies.length}}.</p>-->
                 <div class="list-group" ng-show="session.isActive" >
                   <a href="#" class="list-group-item active">Morphologies in session: <span class="badge">{{session.morphologies.length}}</span></a>
-                  <a href="#" class="list-group-item" ng-repeat="m in session.morphologies" ng-class="{'list-group-item-info':isActiveStatisticsMorphology(m)}" ng-click="loadStatistics(m)">
+                  <a href="#" class="list-group-item" ng-repeat="m in statMorphologies" ng-class="{'list-group-item-info':isActiveStatisticsMorphology(m)}" ng-click="loadStatistics(m)">
                     {{m}}
                   </a>
                 </div>
