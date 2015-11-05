@@ -23,11 +23,11 @@ foreach($files as $file){ // iterate files
 		  //fetch for a specific file:
 		  $onlyfilename = explode('/',$file);
 		  $onlyfilename = end($onlyfilename);
-		  if( (strcmp(substr($onlyfilename,0,strlen($name)),$name) == 0) ){
+		  /*if( (strcmp(substr($onlyfilename,0,strlen($name)),$name) == 0) ){
 			  $_SESSION["stdout"] .= "PASS: ".$onlyfilename."\n";
 		  } else {
 			  $_SESSION["stdout"] .= "NO PASS: ".$onlyfilename."\n";
-		  }
+		  }*/
 		  if( (strcmp(substr($onlyfilename,0,strlen($name)),$name) == 0) ){
 			  array_push($statFileNames, $onlyfilename);
 		  }

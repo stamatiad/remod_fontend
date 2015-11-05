@@ -1,5 +1,25 @@
 (function () {
-	
+	/* Magic: */
+	function defclass(prototype) {
+		var constructor = prototype.constructor;
+		constructor.prototype = prototype;
+		return constructor;
+	};
+	/*function defclass(uber, body) {
+		var base = uber.prototype;
+		var prototype = Object.create(base);
+		var constructor = body.call(prototype, base), prototype.constructor;
+		constructor.prototype = prototype;
+		return constructor;
+	};*/
+	var RemodFile = defclass({
+		name: '',
+		checkbox: false,
+		constructor: function(filename,chkbx){
+			this.name = filename;
+			this.checkbox = chkbx;
+		}
+	});
 	var app = angular.module('remod', [
 		'ngAnimate',
 		'ui.bootstrap',
@@ -14,11 +34,8 @@
 	app.factory('remodSession', ['$rootScope', '$http', '$filter', '$timeout', '$interval', '$modal',
 		function ($rootScope, $http, $filter, $timeout, $interval, $modal) {
 			
-			function defclass(prototype) {
-				var constructor = prototype.constructor;
-				constructor.prototype = prototype;
-				return constructor;
-			};
+			
+			
 			var NaiveNeuron = defclass({
 				name : "",
 				group: "",
@@ -1534,11 +1551,22 @@
 		.state('statistics', {
 		url: "/statistics",
 		templateUrl: "statistics.html",
-		controller: 'statisticsController'
+		controller: 'statsGeneralController'
+		})
+		.state('downloads', {
+		url: "/downloads",
+		templateUrl: "downloads.html",
+		controller: 'statsGeneralController'
 		});
 	});
 	
-	app.controller('statisticsController', function($http, $scope, $timeout, $interval, remodSession){
+	app.controller('downloadsController', function($http, $scope, $timeout, $interval, remodSession){
+		$scope.session = remodSession;
+		
+	});
+	
+	app.controller('statsGeneralController', function($http, $scope, $timeout, $interval, remodSession){
+		
 		$scope.session = remodSession;
 		$scope.activeStatisticsMorphology = "";
 		$scope.statMorphologies = new Array();
@@ -1551,39 +1579,43 @@
 			$scope.activeStatisticsMorphology = name;
 		};
 		$scope.statFileNames = new Array();
+		//Arrays for Angular to $watch and ngRepeat:
+		$scope.TxtFiles = new Array();
+		$scope.TxtFilesNoPrefix = new Array();
+		$scope.SvgFiles = new Array();
 		$scope.getTxtFiles = function(){
-			var tmp = new Array();
+			$scope.TxtFiles.length = 0;
 			var remains;
 			for (var i = 0 ; i < $scope.statFileNames.length ; i++){
 				if( $scope.statFileNames[i].slice(-3).localeCompare('txt') == 0 ){
 					remains = $scope.statFileNames[i].split("/");
-					tmp.push(remains[remains.length-1]);
+					var tmpFile = new RemodFile(remains[remains.length-1],false);
+					$scope.TxtFiles.push(tmpFile);
 				}
 			}
-			return tmp;
 		};
 		$scope.getTxtFilesNoPrefix = function(){
-			var tmp = new Array();
+			$scope.TxtFilesNoPrefix.length = 0;
 			var remains;
 			for (var i = 0 ; i < $scope.statFileNames.length ; i++){
 				if( $scope.statFileNames[i].slice(-3).localeCompare('txt') == 0 ){
 					remains = $scope.statFileNames[i].split("/");
 					//name.length + 1 for the underscore:
-					tmp.push(remains[remains.length-1].slice($scope.activeStatisticsMorphology.length+1));
+					var tmpFile = new RemodFile(remains[remains.length-1].slice($scope.activeStatisticsMorphology.length+1),false);
+					$scope.TxtFilesNoPrefix.push(tmpFile);
 				}
 			}
-			return tmp;
 		};
 		$scope.getSvgFiles = function(){
-			var tmp = new Array();
+			$scope.SvgFiles.length = 0;
 			var remains;
 			for (var i = 0 ; i < $scope.statFileNames.length ; i++){
 				if( $scope.statFileNames[i].slice(-3).localeCompare('svg') == 0 ){
 					remains = $scope.statFileNames[i].split("/");
-					tmp.push(remains[remains.length-1]);
+					var tmpFile = new RemodFile(remains[remains.length-1],false);
+					$scope.SvgFiles.push(tmpFile);
 				}
 			}
-			return tmp;
 		};
 		$scope.loadNeuronStats = function(){
 			//load statistics for the selected neurons:
@@ -1601,12 +1633,47 @@
 					$scope.statFileNames.push(JsonResponse.output.statFileNames[i]);
 				}
 				$scope.makeActiveStatisticsMorphology(name);
+				//Update watch arrays:
+				$scope.getSvgFiles();
+				$scope.getTxtFilesNoPrefix();
+				//$scope.getTxtFiles();
 				console.log("Active stats morph updated to "+$scope.activeStatisticsMorphology);
 			}, function(){
 				console.log("ERROR in fetching statistics!");
 			});
 			return;
 		};
+		$scope.downloadFiles = function(){
+			//Copy selected filenames in orgJSON:
+			$scope.orgJSON.statistics.length = 0;
+			for (var i = 0 ; i < $scope.TxtFiles.length ; i++){
+				$scope.orgJSON.statistics.push($scope.TxtFiles[i].name);
+			}
+			$scope.orgJSON.svg.length = 0;
+			for (var i = 0 ; i < $scope.SvgFiles.length ; i++){
+				$scope.orgJSON.svg.push($scope.SvgFiles[i].name);
+			}
+			$scope.orgJSON.morphologies.length = 0;
+			for (var i = 0 ; i < $scope.statMorphologies.length ; i++){
+				$scope.orgJSON.morphologies.push($scope.statMorphologies[i]+".swc");
+			}
+			var JSONobj = JSON.stringify($scope.orgJSON);
+			console.log("about to call download action with params:");
+			console.log(JSONobj);
+			$http.post("download_files.php",JSONobj).then(function(response){
+				window.location.assign("http://www.remod.gr/uploads/"+$scope.session.phpid+"/downloads/download_files.zip");
+				console.log(response);
+				console.log("Success in running download action!");
+			}, function(){
+				console.log("HTTP.GET ERROR in running remodeling action!");
+			});
+		};
+		$scope.orgJSON = {
+			statistics: new Array(),
+			svg: new Array(),
+			morphologies: new Array()
+		};
+		
 		//wait for partial to be instansiated:
 		$scope.$on('$viewContentLoaded', function() {
 			//pause main view animation and interactivity to save memory:
@@ -1614,11 +1681,9 @@
 			//Update available morphologies, adding the 'Average' morphology also:
 			$scope.statMorphologies.length = 0;
 			for (var i = 0 ; i < $scope.session.morphologies.length ; i++){
-				console.log("pushing name from session "+$scope.session.morphologies[i]);
 				$scope.statMorphologies.push($scope.session.morphologies[i]);
 			}
 			if($scope.session.morphologies.length>1){$scope.statMorphologies.push("average");}
-			console.log($scope.statMorphologies);
 			//request the filenames array from backend for a specific morphology:
 			$scope.loadStatistics($scope.session.activeMorphology.name);
 			/*$http.get("query_statistics.php").then(function(response){
@@ -1631,7 +1696,6 @@
 				//	var tmp = JsonResponse.output.statFileNames[i].split("/");
 				//	$scope.session.statFileNames.push(tmp[tmp.length-1]);
 				//}
-				
 			}, function(){
 				console.log("ERROR in fetching statistics!");
 			});

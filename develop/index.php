@@ -70,7 +70,7 @@ $_SESSION["UPLOAD_PATH"] = "/var/www/html/uploads/";
 				<ul class="nav navbar-nav">
 					<!--<li class="active"><a href="#">Dashboard <span class="sr-only">(current)</span></a></li>-->
 					<li><a href="#/statistics">Statistics</a></li>
-					<li><a href="downloads.php">Downloads</a></li>
+					<li><a href="#/downloads">Downloads</a></li>
 					<li><a href="http://dendrites.gr">Lab</a></li>
 					<li><a href="3D_email_compose.php">Contant</a></li>
 				</ul>

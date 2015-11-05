@@ -8,8 +8,8 @@
       <div class="qv rc sm sp" ng-hide="session.uploadModeIsMultiple()">
         <div class="qw">
           <h5 class="ald">Statistics</h5>
-          <ul class="eb tb" ng-repeat="stat in getTxtFilesNoPrefix()">
-            <li>{{stat}}</li>
+          <ul class="eb tb" ng-repeat="stat in TxtFilesNoPrefix">
+            <li>{{stat.name}}</li>
           </ul>
         </div>
       </div>
@@ -18,8 +18,8 @@
       <div class="qv rc sm sp" ng-show="session.uploadModeIsMultiple()">
         <div class="qw">
           <h5 class="ald">Comparison Statistics</h5>
-          <ul class="eb tb" ng-repeat="stat in getTxtFilesNoPrefix()">
-            <li>{{stat}}</li>
+          <ul class="eb tb" ng-repeat="stat in TxtFilesNoPrefix">
+            <li>{{stat.name}}</li>
           </ul>
         </div>
       </div>
@@ -32,10 +32,10 @@
         <li class="qf b aml">
           Visual statistics
         </li>
-        <li class="qf b aml" ng-repeat="svg in getSvgFiles()">
+        <li class="qf b aml" ng-repeat="svg in SvgFiles">
           <div>
-            {{svg}}
-            <img ng-src="http://www.remod.gr/uploads/{{session.phpid}}/downloads/statistics/{{svg}}" alt="svg file" class="svg"></img>
+            {{svg.name}}
+            <img ng-src="http://www.remod.gr/uploads/{{session.phpid}}/downloads/statistics/{{svg.name}}" alt="svg file" class="svg"></img>
           </div>
         </li>
 
