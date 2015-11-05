@@ -1,28 +1,32 @@
 <!--downloads partial-->
-<div class="container-fluid">
+<div class="amt container-fluid">
 	<div class="row">
 		<div class="col-md-4" ng-hide="session.uploadModeIsMultiple()">
 			<ul class="list-group" ng-show="session.isActive">
-				<a href="#" class="list-group-item active">Morphologies in session: <span class="badge">{{session.morphologies.length}}</span></a>
+				<a href="#" class="list-group-item active">Total Files Selected: <span class="badge">{{(TxtFilesNoPrefix|selectedFiles:true).length}}</span>
+					<button type="button" class ="btn btn-info " ng-click='toggleSelectAll(TxtFilesNoPrefix)'>Select All</button>
+				</a>
 				<li class="list-group-item" ng-repeat="stat in TxtFilesNoPrefix">
 				{{stat.name}}
-				<label><input type="checkbox" name="{{stat.checkbox}}" ng-model="stat.checkbox"></label>
+				<label><input type="checkbox" name="{{stat.checkbox}}" ng-model="stat.checkbox">{{stat.checkbox}}</label>
 				<!--<div>value1 = {{stat.checkbox}}</div>-->
 				</li>
 			</ul>
 		</div>
 		<div class="col-md-4" ng-hide="session.uploadModeIsMultiple()">
 			<ul class="list-group" ng-show="session.isActive">
-				<a href="#" class="list-group-item active">Morphologies in session: <span class="badge">{{session.morphologies.length}}</span></a>
+				<a href="#" class="list-group-item active">Total Files Selected: <span class="badge">{{(SvgFiles|selectedFiles:true).length}}</span>
+					<button type="button" class ="btn btn-info " ng-click='toggleSelectAll(SvgFiles)'>Select All</button>
+				</a>
 				<li href="#" class="list-group-item" ng-repeat="svg in SvgFiles">
 				{{svg.name}}
-				<label><input type="checkbox" name="{{stat.checkbox}}" ng-model="stat.checkbox"></label>
+				<label><input type="checkbox" name="{{svg.checkbox}}" ng-model="svg.checkbox">{{svg.checkbox}}</label>
 				</li>
 			</ul>
 		</div>
 		<div class="col-md-3">
 			<ul class="list-group" ng-show="session.isActive" >
-				<li class="list-group-item active">Total Files Selected: <span class="badge">{{session.morphologies.length}}</span></li>
+				<li class="list-group-item active">Total Files Selected: <span class="badge">{{(TxtFilesNoPrefix|selectedFiles:true).length+(SvgFiles|selectedFiles:true).length}}</span></li>
 				<li class="list-group-item" ng-click="">
 					<button type="button" class ="btn btn-success btn-block" ng-click='downloadFiles()'>Download</button>
 				</li>

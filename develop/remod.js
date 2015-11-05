@@ -1565,6 +1565,17 @@
 		
 	});
 	
+	app.filter('selectedFiles', function () {
+			return function(files,status) {
+				var arr = new Array();
+				for (var i = 0 ; i < files.length ; i++){
+					if(files[i].checkbox == status){arr.push(files[i].name);}
+				}
+				return arr;
+			};
+		});
+		
+	
 	app.controller('statsGeneralController', function($http, $scope, $timeout, $interval, remodSession){
 		
 		$scope.session = remodSession;
@@ -1636,7 +1647,7 @@
 				//Update watch arrays:
 				$scope.getSvgFiles();
 				$scope.getTxtFilesNoPrefix();
-				//$scope.getTxtFiles();
+				$scope.getTxtFiles();
 				console.log("Active stats morph updated to "+$scope.activeStatisticsMorphology);
 			}, function(){
 				console.log("ERROR in fetching statistics!");
@@ -1645,17 +1656,24 @@
 		};
 		$scope.downloadFiles = function(){
 			//Copy selected filenames in orgJSON:
+			//Exw mperdepsei ta mpoutia m me to prefix; na kanw ena filter san an8rwpos SSS
 			$scope.orgJSON.statistics.length = 0;
-			for (var i = 0 ; i < $scope.TxtFiles.length ; i++){
-				$scope.orgJSON.statistics.push($scope.TxtFiles[i].name);
+			for (var i = 0 ; i < $scope.TxtFilesNoPrefix.length ; i++){
+				if($scope.TxtFilesNoPrefix[i].checkbox){
+					$scope.orgJSON.statistics.push($scope.TxtFiles[i].name);
+				}
 			}
 			$scope.orgJSON.svg.length = 0;
 			for (var i = 0 ; i < $scope.SvgFiles.length ; i++){
-				$scope.orgJSON.svg.push($scope.SvgFiles[i].name);
+				if($scope.SvgFiles[i].checkbox){
+					$scope.orgJSON.svg.push($scope.SvgFiles[i].name);
+				}
 			}
 			$scope.orgJSON.morphologies.length = 0;
 			for (var i = 0 ; i < $scope.statMorphologies.length ; i++){
-				$scope.orgJSON.morphologies.push($scope.statMorphologies[i]+".swc");
+				//if(){
+					$scope.orgJSON.morphologies.push($scope.statMorphologies[i]+"_new.swc");
+				//}
 			}
 			var JSONobj = JSON.stringify($scope.orgJSON);
 			console.log("about to call download action with params:");
@@ -1672,6 +1690,25 @@
 			statistics: new Array(),
 			svg: new Array(),
 			morphologies: new Array()
+		};
+		//funny implementation! SSS
+		$scope.toggleSelectAll = function(files){
+			//if any(files.selected) deselect
+			var toggle = false;
+			for (var i = 0 ; i < files.length ; i++){
+				if(files[i].checkbox){toggle = true;break}
+			}
+			if(toggle){
+				//deselect all:
+				for (var i = 0 ; i < files.length ; i++){
+					files[i].checkbox = false;
+				}
+			}else{
+				//select all:
+				for (var i = 0 ; i < files.length ; i++){
+					files[i].checkbox = true;
+				}
+			}
 		};
 		
 		//wait for partial to be instansiated:

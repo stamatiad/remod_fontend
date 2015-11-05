@@ -61,9 +61,9 @@ $_SESSION["stdout"] .= "Zip file is in: ".$zip_file."\n";
 //header('Content-Length: ' . filesize($zip_file));
 
 //Giwrgos:
-header("Content-Type: application/zip");
-header("Content-Disposition: attachment; filename='$file_name'");
-header("Content-Length: " . filesize($zip_file));
+//header("Content-Type: application/zip");
+//header("Content-Disposition: attachment; filename='$file_name'");
+//header("Content-Length: " . filesize($zip_file));
 
 // Force the download
 //header('Content-Disposition: attachment; filename=" . basename($zip_file) . "');
@@ -72,7 +72,7 @@ header("Content-Length: " . filesize($zip_file));
 // IE fix (for HTTPS only) header('Cache-Control: private');
 //header('Pragma: private');
 
-readfile($zip_file);
+//readfile($zip_file);
 
 exit;
 
